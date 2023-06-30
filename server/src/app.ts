@@ -39,6 +39,29 @@ app.get('/api/v1/books', (req, res) => {
   });
 });
 
+app.post('/api/v1/books', (req, res) => {
+  const newId = books[books.length - 1].id + 1;
+  const newBook: Book = Object.assign({ id: newId }, req.body);
+  books.push(newBook);
+
+  fs.writeFile(
+    './dev-data/data/books.json',
+    JSON.stringify(books, null, 2),
+    (err) => {
+      if (err) {
+        console.log(err);
+      }
+
+      res.status(201).json({
+        status: 'success',
+        data: {
+          book: newBook,
+        },
+      });
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} ⚡...`);
 });
