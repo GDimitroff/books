@@ -80,7 +80,34 @@ app.patch('/api/v1/books/:id', (req, res) => {
     (err) => {
       res.status(200).send({
         status: 'success',
-        data: updatedBook,
+        data: {
+          book: updatedBook,
+        },
+      });
+    }
+  );
+});
+
+app.delete('/api/v1/books/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const book = books.find((book) => book.id === id);
+
+  if (!book) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  const updatedBooks = books.filter((b) => b.id !== book.id);
+
+  fs.writeFile(
+    './dev-data/data/books.json',
+    JSON.stringify(updatedBooks, null, 2),
+    (err) => {
+      res.status(204).send({
+        status: 'success',
+        data: null,
       });
     }
   );
