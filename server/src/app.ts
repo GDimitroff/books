@@ -58,6 +58,34 @@ app.get('/api/v1/books/:id', (req, res) => {
   });
 });
 
+app.patch('/api/v1/books/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const book = books.find((book) => book.id === id);
+
+  if (!book) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  const updatedBook = { ...book, ...req.body };
+  const updatedBooks = books.map((book) => {
+    return book.id === updatedBook.id ? updatedBook : book;
+  });
+
+  fs.writeFile(
+    './dev-data/data/books.json',
+    JSON.stringify(updatedBooks, null, 2),
+    (err) => {
+      res.status(200).send({
+        status: 'success',
+        data: updatedBook,
+      });
+    }
+  );
+});
+
 app.post('/api/v1/books', (req, res) => {
   const newId = books[books.length - 1].id + 1;
   const newBook: Book = Object.assign({ id: newId }, req.body);
@@ -67,10 +95,6 @@ app.post('/api/v1/books', (req, res) => {
     './dev-data/data/books.json',
     JSON.stringify(books, null, 2),
     (err) => {
-      if (err) {
-        console.log(err);
-      }
-
       res.status(201).json({
         status: 'success',
         data: {
