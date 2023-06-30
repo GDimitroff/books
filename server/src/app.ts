@@ -39,6 +39,25 @@ app.get('/api/v1/books', (req, res) => {
   });
 });
 
+app.get('/api/v1/books/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const book = books.find((book) => book.id === id);
+
+  if (!book) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      book,
+    },
+  });
+});
+
 app.post('/api/v1/books', (req, res) => {
   const newId = books[books.length - 1].id + 1;
   const newBook: Book = Object.assign({ id: newId }, req.body);
