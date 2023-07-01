@@ -137,6 +137,41 @@ const deleteBook = (req: Request, res: Response) => {
   );
 };
 
+const getAllUsers = (req: Request, res: Response) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const getUser = (req: Request, res: Response) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const createUser = (req: Request, res: Response) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const updateUser = (req: Request, res: Response) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
+const deleteUser = (req: Request, res: Response) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not yet defined!',
+  });
+};
+
 // 3) ROUTES
 
 app.route('/api/v1/books').get(getAllBooks).post(createBook);
@@ -146,6 +181,14 @@ app
   .get(getBook)
   .patch(updateBook)
   .delete(deleteBook);
+
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
+
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 // 4) START SERVER
 
