@@ -173,22 +173,17 @@ const deleteUser = (req: Request, res: Response) => {
 };
 
 // 3) ROUTES
+const bookRouter = express.Router();
+const userRouter = express.Router();
 
-app.route('/api/v1/books').get(getAllBooks).post(createBook);
+bookRouter.route('/').get(getAllBooks).post(createBook);
+bookRouter.route('/:id').get(getBook).patch(updateBook).delete(deleteBook);
 
-app
-  .route('/api/v1/books/:id')
-  .get(getBook)
-  .patch(updateBook)
-  .delete(deleteBook);
+userRouter.route('/').get(getAllUsers).post(createUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 
-app.route('/api/v1/users').get(getAllUsers).post(createUser);
-
-app
-  .route('/api/v1/users/:id')
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
+app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/users', userRouter);
 
 // 4) START SERVER
 
