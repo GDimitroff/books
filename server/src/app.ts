@@ -2,6 +2,7 @@ import fs from 'fs';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 
 export interface Book {
   id: number;
@@ -21,6 +22,8 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 const app = express();
 
+// 1) MIDDLEWARES
+app.use(morgan('dev'));
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +31,8 @@ app.use(express.urlencoded({ extended: true }));
 const books: Book[] = JSON.parse(
   fs.readFileSync('./dev-data/data/books.json', 'utf8')
 );
+
+// 2) ROUTE HANDLERS
 
 const getAllBooks = (req: Request, res: Response) => {
   res.status(200).json({
@@ -132,6 +137,8 @@ const deleteBook = (req: Request, res: Response) => {
   );
 };
 
+// 3) ROUTES
+
 app.route('/api/v1/books').get(getAllBooks).post(createBook);
 
 app
@@ -139,6 +146,8 @@ app
   .get(getBook)
   .patch(updateBook)
   .delete(deleteBook);
+
+// 4) START SERVER
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} ⚡...`);
