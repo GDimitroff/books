@@ -2,13 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "build/app.js",
+  "main": "build/server.js",
   "scripts": {
     "build": "rimraf build && tsc",
     "preserve": "npm run build",
-    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon build/app.js\"",
+    "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon build/server.js\"",
     "prestart": "npm run build",
-    "start": "cross-env NODE_ENV=production node build/app.js",
+    "start": "cross-env NODE_ENV=production node build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gospodin Dimitrov",
