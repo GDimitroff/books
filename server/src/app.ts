@@ -1,5 +1,5 @@
 import fs from 'fs';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 
@@ -29,7 +29,7 @@ const books: Book[] = JSON.parse(
   fs.readFileSync('./dev-data/data/books.json', 'utf8')
 );
 
-app.get('/api/v1/books', (req, res) => {
+const getAllBooks = (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
     results: books.length,
@@ -37,9 +37,9 @@ app.get('/api/v1/books', (req, res) => {
       books,
     },
   });
-});
+};
 
-app.get('/api/v1/books/:id', (req, res) => {
+const getBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const book = books.find((book) => book.id === id);
 
@@ -56,9 +56,28 @@ app.get('/api/v1/books/:id', (req, res) => {
       book,
     },
   });
-});
+};
 
-app.patch('/api/v1/books/:id', (req, res) => {
+const createBook = (req: Request, res: Response) => {
+  const newId = books[books.length - 1].id + 1;
+  const newBook: Book = Object.assign({ id: newId }, req.body);
+  books.push(newBook);
+
+  fs.writeFile(
+    './dev-data/data/books.json',
+    JSON.stringify(books, null, 2),
+    (err) => {
+      res.status(201).json({
+        status: 'success',
+        data: {
+          book: newBook,
+        },
+      });
+    }
+  );
+};
+
+const updateBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const book = books.find((book) => book.id === id);
 
@@ -86,9 +105,9 @@ app.patch('/api/v1/books/:id', (req, res) => {
       });
     }
   );
-});
+};
 
-app.delete('/api/v1/books/:id', (req, res) => {
+const deleteBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const book = books.find((book) => book.id === id);
 
@@ -111,26 +130,15 @@ app.delete('/api/v1/books/:id', (req, res) => {
       });
     }
   );
-});
+};
 
-app.post('/api/v1/books', (req, res) => {
-  const newId = books[books.length - 1].id + 1;
-  const newBook: Book = Object.assign({ id: newId }, req.body);
-  books.push(newBook);
+app.route('/api/v1/books').get(getAllBooks).post(createBook);
 
-  fs.writeFile(
-    './dev-data/data/books.json',
-    JSON.stringify(books, null, 2),
-    (err) => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          book: newBook,
-        },
-      });
-    }
-  );
-});
+app
+  .route('/api/v1/books/:id')
+  .get(getBook)
+  .patch(updateBook)
+  .delete(deleteBook);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} ⚡...`);
