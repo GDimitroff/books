@@ -1,17 +1,17 @@
 import express from 'express';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import morgan from 'morgan';
 
 import bookRouter from './routes/bookRoutes';
 import userRouter from './routes/userRoutes';
 
-dotenv.config();
-
 const app = express();
 
 // 1) MIDDLEWARES
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

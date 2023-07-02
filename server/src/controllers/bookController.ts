@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 export interface Book {
   id: number;
