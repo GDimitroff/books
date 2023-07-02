@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export interface Book {
   id: number;
@@ -18,6 +18,25 @@ const books: Book[] = JSON.parse(
   fs.readFileSync('./dev-data/data/books.json', 'utf8')
 );
 
+export const checkID = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  val: string
+) => {
+  const id = Number(val);
+  const book = books.find((book) => book.id === id);
+
+  if (!book) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+
+  next();
+};
+
 export const getAllBooks = (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
@@ -31,13 +50,6 @@ export const getAllBooks = (req: Request, res: Response) => {
 export const getBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const book = books.find((book) => book.id === id);
-
-  if (!book) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
 
   res.status(200).json({
     status: 'success',
@@ -70,13 +82,6 @@ export const updateBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const book = books.find((book) => book.id === id);
 
-  if (!book) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   const updatedBook = { ...book, ...req.body };
   const updatedBooks = books.map((book) => {
     return book.id === updatedBook.id ? updatedBook : book;
@@ -98,16 +103,7 @@ export const updateBook = (req: Request, res: Response) => {
 
 export const deleteBook = (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const book = books.find((book) => book.id === id);
-
-  if (!book) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
-  const updatedBooks = books.filter((b) => b.id !== book.id);
+  const updatedBooks = books.filter((b) => b.id !== id);
 
   fs.writeFile(
     './dev-data/data/books.json',
