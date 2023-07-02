@@ -8,7 +8,7 @@ router.param('id', bookController.checkID);
 router
   .route('/')
   .get(bookController.getAllBooks)
-  .post(bookController.createBook);
+  .post(bookController.checkBody, bookController.createBook);
 
 router
   .route('/:id')

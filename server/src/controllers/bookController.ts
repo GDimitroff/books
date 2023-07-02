@@ -14,6 +14,20 @@ export interface Book {
   website: string;
 }
 
+const isBook = (book: Book): book is Book => {
+  return (
+    typeof book.isbn === 'number' &&
+    typeof book.title === 'string' &&
+    typeof book.subtitle === 'string' &&
+    typeof book.author === 'string' &&
+    typeof book.published === 'string' &&
+    typeof book.publisher === 'string' &&
+    typeof book.pages === 'number' &&
+    typeof book.description === 'string' &&
+    typeof book.website === 'string'
+  );
+};
+
 const books: Book[] = JSON.parse(
   fs.readFileSync('./dev-data/data/books.json', 'utf8')
 );
@@ -31,6 +45,19 @@ export const checkID = (
     return res.status(404).json({
       status: 'fail',
       message: 'Invalid ID',
+    });
+  }
+
+  next();
+};
+
+export const checkBody = (req: Request, res: Response, next: NextFunction) => {
+  const book: Book = req.body;
+
+  if (!isBook(book)) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Invalid book data',
     });
   }
 
