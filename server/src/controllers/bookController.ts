@@ -95,6 +95,8 @@ export const createBook = (req: Request, res: Response) => {
     './dev-data/data/books.json',
     JSON.stringify(books, null, 2),
     (err) => {
+      if (err) return;
+
       res.status(201).json({
         status: 'success',
         data: {
@@ -118,6 +120,8 @@ export const updateBook = (req: Request, res: Response) => {
     './dev-data/data/books.json',
     JSON.stringify(updatedBooks, null, 2),
     (err) => {
+      if (err) return;
+
       res.status(200).send({
         status: 'success',
         data: {
@@ -136,6 +140,8 @@ export const deleteBook = (req: Request, res: Response) => {
     './dev-data/data/books.json',
     JSON.stringify(updatedBooks, null, 2),
     (err) => {
+      if (err) return;
+
       res.status(204).send({
         status: 'success',
         data: null,
