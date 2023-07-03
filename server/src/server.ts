@@ -23,7 +23,7 @@ const bookSchema = new mongoose.Schema<Book>({
   },
   description: {
     type: String,
-    default: '',
+    default: 'test description',
   },
   pages: {
     type: Number,
@@ -32,6 +32,20 @@ const bookSchema = new mongoose.Schema<Book>({
 });
 
 const Book = mongoose.model<Book>('Book', bookSchema);
+
+const testBook = new Book({
+  title: 'test book 2',
+  pages: 59,
+});
+
+testBook
+  .save()
+  .then((doc) => {
+    console.log(doc);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 const PORT = process.env.PORT || 8000;
 
